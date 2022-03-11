@@ -6,30 +6,36 @@ const Under = Symbol("low");
 const Lost = Symbol("lose");
 const None = Symbol("none");
 
+let currentState = None;
+
 let randNumber = getRandomNumber();
 console.log(randNumber);
 
 document.querySelector('.check').addEventListener('click', function () {
-  let guessValue = Number(document.querySelector('.guess').value);
-  let score = Number(document.querySelector('.score').textContent);
+  if (currentState !== Won && currentState !== Lost) {
+    let guessValue = Number(document.querySelector('.guess').value);
+    let score = Number(document.querySelector('.score').textContent);
 
-  if (guessValue) {
-    if (guessValue < randNumber) {
-      refreshMessage(score > 1 ? Under : Lost);
-    } else if (guessValue > randNumber) {
-      refreshMessage(score > 1 ? Over : Lost);
+    if (guessValue) {
+      if (guessValue < randNumber) {
+        refreshMessage(score > 1 ? Under : Lost);
+      } else if (guessValue > randNumber) {
+        refreshMessage(score > 1 ? Over : Lost);
+      } else {
+        refreshMessage(Won);
+        refreshHighscore();
+        displayShareButton('visible');
+        refreshBackground(Won);
+      }
     } else {
-      refreshMessage(Won);
-      refreshHighscore();
-      displayShareButton('visible');
-      refreshBackground(Won);
+      document.querySelector('.message').textContent = 'Guess what? you forgot to inform a number 🤭';
     }
   } else {
-    document.querySelector('.message').textContent = 'Guess what? you forgot to inform a number 🤭';
+    reset();
   }
 });
 
-document.querySelector('.again').addEventListener('click', function () {
+function reset() {
   randNumber = getRandomNumber();
   document.querySelector('.message').textContent = 'Start guessing...';
   document.querySelector('.guess').value = null;
@@ -37,20 +43,22 @@ document.querySelector('.again').addEventListener('click', function () {
   document.querySelector('.number').textContent = '?';
   displayShareButton('hidden');
   refreshBackground(None);
-});
+  document.querySelector('.check').textContent = 'Check!'
+  currentState = None;
+}
 
-document.querySelector('.share').addEventListener('click', function() {
-  let score = Number(document.querySelector('.score').textContent);
-  let highscore = Number(document.querySelector('.highscore').textContent);
-  let shareText = `I got the right number with ${21 - score} guesses
-My Highscore is: ${highscore}
-Test your luck on https://guesswhatnumber.netlify.app`;
+// document.querySelector('.share').addEventListener('click', function() {
+//   let score = Number(document.querySelector('.score').textContent);
+//   let highscore = Number(document.querySelector('.highscore').textContent);
+//   let shareText = `I got the right number with ${21 - score} guesses
+// My Highscore is: ${highscore}
+// Test your luck on https://guesswhatnumber.netlify.app`;
   
-  navigator.clipboard.writeText(shareText);
+//   navigator.clipboard.writeText(shareText);
   
-  var tooltip = document.getElementById("myTooltip");
-  tooltip.innerHTML = "Copied";
-});
+//   var tooltip = document.getElementById("myTooltip");
+//   tooltip.innerHTML = "Copied";
+// });
 
 function refreshHighscore() {
   let highscore = Number(document.querySelector('.highscore').textContent);
@@ -74,6 +82,8 @@ function refreshBackground(state) {
 }
 
 function refreshMessage(state) {
+  currentState = state;
+
   let message
   switch (state) {
     case Won:
@@ -100,10 +110,11 @@ function refreshMessage(state) {
 
 function revealNumber() {
   document.querySelector('.number').textContent = randNumber;
+  document.querySelector('.check').textContent = 'Restart'
 }
 
 function displayShareButton(type) {
-  document.querySelector('.share').style.visibility = type;
+  // document.querySelector('.share').style.visibility = type;
 }
 
 function getRandomNumber() { 
