@@ -7,6 +7,7 @@ const Lost = Symbol("lose");
 const None = Symbol("none");
 
 let randNumber = getRandomNumber();
+console.log(randNumber);
 
 document.querySelector('.check').addEventListener('click', function () {
   let guessValue = Number(document.querySelector('.guess').value);
@@ -24,7 +25,7 @@ document.querySelector('.check').addEventListener('click', function () {
       refreshBackground(Won);
     }
   } else {
-    document.querySelector('.message').textContent = 'Guess what? you missed to inform a number 🤭';
+    document.querySelector('.message').textContent = 'Guess what? you forgot to inform a number 🤭';
   }
 });
 
@@ -36,6 +37,19 @@ document.querySelector('.again').addEventListener('click', function () {
   document.querySelector('.number').textContent = '?';
   displayShareButton('hidden');
   refreshBackground(None);
+});
+
+document.querySelector('.share').addEventListener('click', function() {
+  let score = Number(document.querySelector('.score').textContent);
+  let highscore = Number(document.querySelector('.highscore').textContent);
+  let shareText = `I got the right number with ${21 - score} guesses
+My Highscore is: ${highscore}
+Test your luck on https://guesswhatnumber.netlify.app`;
+  
+  navigator.clipboard.writeText(shareText);
+  
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = "Copied";
 });
 
 function refreshHighscore() {
@@ -79,7 +93,7 @@ function refreshMessage(state) {
   }
   document.querySelector('.message').textContent = message;
   let score = Number(document.querySelector('.score').textContent);
-  if (score > 1) {
+  if (score > 1 & state !== Won) {
     document.querySelector('.score').textContent = score - 1  
   }
 }
@@ -89,7 +103,7 @@ function revealNumber() {
 }
 
 function displayShareButton(type) {
-  // document.querySelector('.share').style.visibility = type;
+  document.querySelector('.share').style.visibility = type;
 }
 
 function getRandomNumber() { 

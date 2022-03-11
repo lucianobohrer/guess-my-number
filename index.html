@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="style.css" />
-    <title>Guess My Number!</title>
+    <title>Guess What Number!</title>
   </head>
   <body>
     <div id="#overlay"></div>
     <header>
-      <h1>Guess My Number!</h1>
+      <h1>Guess What Number!</h1>
       <p class="between">(Between 1 and 20)</p>
       <button class="btn again">Again!</button>
       <div class="number">?</div>
@@ -26,7 +26,12 @@
         <p class="label-highscore">
           🥇 Highscore: <span class="highscore">0</span>
         </p>
-        <button id="#share" class="btn share">Share your score!</button>
+        <div class="tooltip">
+          <button id="#share" class="btn share">
+            <span class="tooltiptext" id="myTooltip">Copy to clipboard</span>
+            Share your score!
+          </button>
+        </div>
       </section>
     </main>
     <script src="script.js"></script>
