@@ -9,7 +9,6 @@ const None = Symbol("none");
 let currentState = None;
 
 let randNumber = getRandomNumber();
-console.log(randNumber);
 
 document.querySelector('.check').addEventListener('click', function () {
   if (currentState !== Won && currentState !== Lost) {
@@ -24,7 +23,7 @@ document.querySelector('.check').addEventListener('click', function () {
       } else {
         refreshMessage(Won);
         refreshHighscore();
-        displayShareButton('visible');
+        displayShareButton(true);
         refreshBackground(Won);
       }
     } else {
@@ -45,20 +44,19 @@ function reset() {
   refreshBackground(None);
   document.querySelector('.check').textContent = 'Check!'
   currentState = None;
+  displayShareButton(false);
 }
 
-// document.querySelector('.share').addEventListener('click', function() {
-//   let score = Number(document.querySelector('.score').textContent);
-//   let highscore = Number(document.querySelector('.highscore').textContent);
-//   let shareText = `I got the right number with ${21 - score} guesses
-// My Highscore is: ${highscore}
-// Test your luck on https://guesswhatnumber.netlify.app`;
+document.querySelector('.share').addEventListener('click', function() {
+  let score = Number(document.querySelector('.score').textContent);
+  let highscore = Number(document.querySelector('.highscore').textContent);
+  let shareText = `I got the right number with ${21 - score} guesses
+My Highscore is: ${highscore}
+Test your luck on https://guesswhatnumber.netlify.app`;
   
-//   navigator.clipboard.writeText(shareText);
-  
-//   var tooltip = document.getElementById("myTooltip");
-//   tooltip.innerHTML = "Copied";
-// });
+  navigator.clipboard.writeText(shareText);
+  document.querySelector('.share').textContent = 'Copied'
+});
 
 function refreshHighscore() {
   let highscore = Number(document.querySelector('.highscore').textContent);
@@ -74,6 +72,7 @@ function refreshBackground(state) {
       document.querySelector('body').style.background = "url('bg-cat.gif') rgba(0, 0, 0, 0.8)";
       break;
     case Lost:
+      document.querySelector('body').style.background = "url('bg-catcry.gif') rgba(0, 0, 0, 0.8)";
       break;
     default: 
       document.querySelector('body').style.background = "#222";
@@ -93,6 +92,7 @@ function refreshMessage(state) {
     case Lost:
       message = '💥 you lost the game :(';
       revealNumber();
+      refreshBackground(Lost);
       break;
     case Over:
       message = '📈 not that high';
@@ -101,6 +101,7 @@ function refreshMessage(state) {
       message = '📉 not that low';
       break;
   }
+
   document.querySelector('.message').textContent = message;
   let score = Number(document.querySelector('.score').textContent);
   if (score > 1 & state !== Won) {
@@ -113,8 +114,9 @@ function revealNumber() {
   document.querySelector('.check').textContent = 'Restart'
 }
 
-function displayShareButton(type) {
-  // document.querySelector('.share').style.visibility = type;
+function displayShareButton(visible) {
+  document.querySelector('.share').style.display = visible ? 'initial' : 'none';
+  document.querySelector('.guess').style.display = visible ? 'none' : 'initial';
 }
 
 function getRandomNumber() { 
